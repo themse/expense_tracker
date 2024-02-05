@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:expense_tracker/widgets/new_expense.dart';
 import 'package:expense_tracker/models/expense.dart';
 import 'package:expense_tracker/widgets/expense_chart.dart';
 import 'package:expense_tracker/widgets/expenses_list/expenses_list.dart';
@@ -43,7 +44,15 @@ class _ExpensesState extends State<Expenses> {
     showModalBottomSheet(
         context: context,
         builder: (context) {
-          return Text('Hello World');
+          return NewExpense(
+            addNewExpense: ({required Expense expense}) {
+              setState(() {
+                _registeredExpenses.insert(0, expense);
+              });
+
+              Navigator.pop(context);
+            },
+          );
         });
   }
 
