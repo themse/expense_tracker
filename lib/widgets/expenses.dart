@@ -40,20 +40,22 @@ class _ExpensesState extends State<Expenses> {
     ),
   ];
 
-  void _addNewExpense() {
+  void _openAddExpenseModal() {
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         builder: (context) {
           return NewExpense(
-            addNewExpense: ({required Expense expense}) {
-              setState(() {
-                _registeredExpenses.insert(0, expense);
-              });
-
-              Navigator.pop(context);
-            },
+            addNewExpense: _addExpense,
           );
         });
+  }
+
+  void _addExpense({required Expense expense}) {
+    setState(() {
+      _registeredExpenses.insert(0, expense);
+    });
+    Navigator.pop(context);
   }
 
   @override
@@ -69,7 +71,7 @@ class _ExpensesState extends State<Expenses> {
         title: const Text("Flutter ExpenseTracker"),
         actions: [
           IconButton(
-            onPressed: _addNewExpense,
+            onPressed: _openAddExpenseModal,
             icon: const Icon(Icons.add),
             color: Colors.white,
             iconSize: 35,
