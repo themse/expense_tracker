@@ -13,32 +13,7 @@ class Expenses extends StatefulWidget {
 }
 
 class _ExpensesState extends State<Expenses> {
-  final List<Expense> _registeredExpenses = [
-    Expense(
-      title: 'Flutter course',
-      amount: 19.99,
-      date: DateTime.now(),
-      category: Category.work,
-    ),
-    Expense(
-      title: 'United States',
-      amount: 9.99,
-      date: DateTime.now(),
-      category: Category.travel,
-    ),
-    Expense(
-      title: 'Cinema',
-      amount: 10.5,
-      date: DateTime.now(),
-      category: Category.leisure,
-    ),
-    Expense(
-      title: 'Cheese Macroni',
-      amount: 2.5,
-      date: DateTime.now(),
-      category: Category.food,
-    ),
-  ];
+  final List<Expense> _registeredExpenses = [];
 
   void _openAddExpenseModal() {
     showModalBottomSheet(
@@ -56,6 +31,12 @@ class _ExpensesState extends State<Expenses> {
       _registeredExpenses.insert(0, expense);
     });
     Navigator.pop(context);
+  }
+
+  void _removeExpense({required Expense expense}) {
+    setState(() {
+      _registeredExpenses.remove(expense);
+    });
   }
 
   @override
@@ -87,7 +68,9 @@ class _ExpensesState extends State<Expenses> {
               child: ExpenseChart(),
             ),
             Expanded(
-              child: ExpensesList(registeredExpenses: _registeredExpenses),
+              child: ExpensesList(
+                  registeredExpenses: _registeredExpenses,
+                  removeExpense: _removeExpense),
             ),
           ],
         ),
