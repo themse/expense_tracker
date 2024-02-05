@@ -13,8 +13,10 @@ class RootApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Expenses(),
-      theme: ThemeData(useMaterial3: true),
+      home: const Expenses(),
+      theme: ThemeData().copyWith(
+        useMaterial3: true,
+      ),
     );
   }
 }
