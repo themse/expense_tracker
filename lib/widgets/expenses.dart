@@ -13,7 +13,14 @@ class Expenses extends StatefulWidget {
 }
 
 class _ExpensesState extends State<Expenses> {
-  final List<Expense> _registeredExpenses = [];
+  final List<Expense> _registeredExpenses = [
+    Expense(
+      title: 'Learn Flutter',
+      amount: 10.50,
+      date: DateTime.now(),
+      category: Category.leisure,
+    ),
+  ];
 
   void _openAddExpenseModal() {
     showModalBottomSheet(
@@ -61,12 +68,6 @@ class _ExpensesState extends State<Expenses> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepPurple,
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
         title: const Text("Flutter ExpenseTracker"),
         actions: [
           IconButton(
