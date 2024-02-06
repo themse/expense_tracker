@@ -1,8 +1,8 @@
+import 'package:expense_tracker/widgets/chart/chart.dart';
 import 'package:flutter/material.dart';
 
 import 'package:expense_tracker/widgets/new_expense.dart';
 import 'package:expense_tracker/models/expense.dart';
-import 'package:expense_tracker/widgets/expense_chart.dart';
 import 'package:expense_tracker/widgets/expenses_list/expenses_list.dart';
 
 class Expenses extends StatefulWidget {
@@ -82,9 +82,9 @@ class _ExpensesState extends State<Expenses> {
         margin: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           children: [
-            const SizedBox(
+            SizedBox(
               width: double.infinity,
-              child: ExpenseChart(),
+              child: Chart(expenses: _registeredExpenses),
             ),
             Expanded(
               child: ExpensesList(
