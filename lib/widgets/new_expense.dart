@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
@@ -54,21 +57,24 @@ class _NewExpenseState extends State<NewExpense> {
     });
   }
 
-  void _submitForm() {
-    // get all data
-    final title = _titleController.text.trim();
-    final amount = double.tryParse(_amountController.text);
-    final category = _selectedCategory;
-    final date = _selectedDate;
-
-    // check validation
-    bool isValid = true;
-    isValid = isValid && title.isNotEmpty;
-    isValid = isValid && amount != null && amount > 0;
-    isValid = isValid && category != null;
-    isValid = isValid && date != null;
-
-    if (!isValid) {
+  void _showDialog() {
+    if (Platform.isIOS) {
+      showCupertinoDialog(
+          context: context,
+          builder: (context) {
+            return CupertinoAlertDialog(
+              title: const Text('Invalid input'),
+              content: const Text('Please, make sure all fields was entered.'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Close'))
+              ],
+            );
+          });
+    } else {
       showDialog<void>(
         context: context,
         builder: (context) {
@@ -85,6 +91,25 @@ class _NewExpenseState extends State<NewExpense> {
           );
         },
       );
+    }
+  }
+
+  void _submitForm() {
+    // get all data
+    final title = _titleController.text.trim();
+    final amount = double.tryParse(_amountController.text);
+    final category = _selectedCategory;
+    final date = _selectedDate;
+
+    // check validation
+    bool isValid = true;
+    isValid = isValid && title.isNotEmpty;
+    isValid = isValid && amount != null && amount > 0;
+    isValid = isValid && category != null;
+    isValid = isValid && date != null;
+
+    if (!isValid) {
+      _showDialog();
       return;
     }
 
