@@ -105,83 +105,181 @@ class _NewExpenseState extends State<NewExpense> {
     final bool isDarkMode =
         MediaQuery.of(context).platformBrightness == Brightness.dark;
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value:
-          isDarkMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
-      child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 50, 16, 16),
-          child: Column(children: [
-            TextField(
-              controller: _titleController,
-              maxLength: 50,
-              decoration: const InputDecoration(
-                labelText: 'Some Text',
+    return LayoutBuilder(builder: (context, constraints) {
+      final double widgetWidth = constraints.maxWidth;
+
+      return AnnotatedRegion<SystemUiOverlayStyle>(
+        value:
+            isDarkMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+        child: Scaffold(
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+              child: Column(
+                children: [
+                  if (widgetWidth >= 600)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _titleController,
+                            maxLength: 50,
+                            decoration: const InputDecoration(
+                              labelText: 'Some Text',
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 24,
+                        ),
+                        Expanded(
+                          child: TextField(
+                            controller: _amountController,
+                            decoration: const InputDecoration(
+                              labelText: 'Amount',
+                              prefixText: '\$',
+                            ),
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                      ],
+                    )
+                  else
+                    TextField(
+                      controller: _titleController,
+                      maxLength: 50,
+                      decoration: const InputDecoration(
+                        labelText: 'Some Text',
+                      ),
+                    ),
+                  if (widgetWidth >= 600)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: DropdownButton<Category>(
+                            isExpanded: true,
+                            hint: const Text('Category'),
+                            value: _selectedCategory,
+                            items: categoryIcons.entries
+                                .map((entry) => DropdownMenuItem(
+                                    value: entry.key,
+                                    child: Row(
+                                      children: [
+                                        Icon(entry.value),
+                                        const SizedBox(width: 10),
+                                        Text(entry.key.name)
+                                      ],
+                                    )))
+                                .toList(),
+                            onChanged: _changeCategory,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        Expanded(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(_selectedDate == null
+                                  ? 'No Date selected'
+                                  : formatter.format(_selectedDate!)),
+                              IconButton(
+                                onPressed: _presentDatePicker,
+                                icon: const Icon(Icons.calendar_month),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  else
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _amountController,
+                            decoration: const InputDecoration(
+                              labelText: 'Amount',
+                              prefixText: '\$',
+                            ),
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(_selectedDate == null
+                                  ? 'No Date selected'
+                                  : formatter.format(_selectedDate!)),
+                              IconButton(
+                                onPressed: _presentDatePicker,
+                                icon: const Icon(Icons.calendar_month),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  const SizedBox(height: 20),
+                  if (widgetWidth >= 600)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Cancel'),
+                        ),
+                        ElevatedButton(
+                            onPressed: _submitForm,
+                            child: const Text('Save Expense'))
+                      ],
+                    )
+                  else
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        DropdownButton<Category>(
+                          hint: const Text('Category'),
+                          value: _selectedCategory,
+                          items: categoryIcons.entries
+                              .map((entry) => DropdownMenuItem(
+                                  value: entry.key,
+                                  child: Row(
+                                    children: [
+                                      Icon(entry.value),
+                                      const SizedBox(width: 10),
+                                      Text(entry.key.name)
+                                    ],
+                                  )))
+                              .toList(),
+                          onChanged: _changeCategory,
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Cancel'),
+                        ),
+                        ElevatedButton(
+                            onPressed: _submitForm,
+                            child: const Text('Save Expense'))
+                      ],
+                    )
+                ],
               ),
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _amountController,
-                    decoration: const InputDecoration(
-                      labelText: 'Amount',
-                      prefixText: '\$',
-                    ),
-                    keyboardType: TextInputType.number,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(_selectedDate == null
-                          ? 'No Date selected'
-                          : formatter.format(_selectedDate!)),
-                      IconButton(
-                        onPressed: _presentDatePicker,
-                        icon: const Icon(Icons.calendar_month),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                DropdownButton<Category>(
-                  hint: const Text('Category'),
-                  value: _selectedCategory,
-                  items: categoryIcons.entries
-                      .map((entry) => DropdownMenuItem(
-                          value: entry.key,
-                          child: Row(
-                            children: [
-                              Icon(entry.value),
-                              const SizedBox(width: 10),
-                              Text(entry.key.name)
-                            ],
-                          )))
-                      .toList(),
-                  onChanged: _changeCategory,
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Cancel'),
-                ),
-                ElevatedButton(
-                    onPressed: _submitForm, child: const Text('Save Expense'))
-              ],
-            )
-          ]),
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
